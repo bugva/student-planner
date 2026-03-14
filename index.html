@@ -2,13 +2,13 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <title>Öğrenci Asistanı</title>
+  <title>Üniversite Öğrenci Asistanı</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- iPhone'da tam ekran için -->
+  <!-- iPhone tam ekran -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Ders Asistanı" />
+  <meta name="apple-mobile-web-app-title" content="Öğrenci Asistanı" />
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -18,80 +18,147 @@
   </header>
 
   <nav class="tabs">
-    <button class="tab-button active" data-tab="tasks">Görevler</button>
-    <button class="tab-button" data-tab="exams">Sınavlar</button>
-    <button class="tab-button" data-tab="topics">Eksik Konular</button>
+    <button class="tab-button active" data-tab="courses">Dersler</button>
+    <button class="tab-button" data-tab="gpa">Ortalama</button>
+    <button class="tab-button" data-tab="schedule">Zamanlayıcı</button>
   </nav>
 
   <main>
-    <!-- Görevler -->
-    <section id="tasks" class="tab active">
-      <h2>Görevler</h2>
-      <form id="task-form" class="card">
-        <label>
-          Ders:
-          <input type="text" id="task-course" placeholder="Örn: Matematik" required />
-        </label>
-        <label>
-          Görev:
-          <input type="text" id="task-title" placeholder="Örn: 5. ünite ödevi" required />
-        </label>
-        <label>
-          Son Tarih:
-          <input type="date" id="task-due" />
-        </label>
-        <button type="submit">Ekle</button>
-      </form>
+    <!-- DERSLER -->
+    <section id="courses" class="tab active">
+      <div class="courses-layout">
+        <aside class="courses-sidebar card">
+          <div class="sidebar-header">
+            <h2>Dersler</h2>
+            <button id="add-course-btn" class="small-accent-btn">+ Ders</button>
+          </div>
+          <div id="course-list" class="course-list"></div>
+        </aside>
 
-      <div id="task-list" class="list"></div>
+        <section class="course-detail card" id="course-detail">
+          <div id="no-course-selected">
+            <p style="color:#9ca3af;font-size:14px;">
+              Soldan bir ders seç veya yeni ders ekle.
+            </p>
+          </div>
+
+          <div id="course-content" class="hidden">
+            <h2 id="course-title"></h2>
+
+            <div class="detail-section">
+              <h3>Notlar / Eksikler</h3>
+              <textarea id="course-notes" rows="6" placeholder="Bu derste eksik olduğun konuları, özetleri, önemli noktaları buraya yaz."></textarea>
+              <button id="save-notes-btn" class="small-accent-btn">Notları Kaydet</button>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-header">
+                <h3>Dosyalar / Kaynaklar</h3>
+                <button id="add-resource-btn" class="small-accent-btn">+ Kaynak</button>
+              </div>
+              <p class="muted-text" style="margin-top:-4px;margin-bottom:8px;">
+                Buraya dosyaların için link ekleyebilirsin (Google Drive, pdf linki, ders portalı vs.).
+              </p>
+              <div id="resource-list" class="list"></div>
+            </div>
+          </div>
+        </section>
+      </div>
     </section>
 
-    <!-- Sınavlar -->
-    <section id="exams" class="tab">
-      <h2>Sınavlar</h2>
-      <form id="exam-form" class="card">
-        <label>
-          Ders:
-          <input type="text" id="exam-course" placeholder="Örn: Fizik" required />
-        </label>
-        <label>
-          Sınav Adı:
-          <input type="text" id="exam-title" placeholder="Örn: Vize" required />
-        </label>
-        <label>
-          Tarih:
-          <input type="date" id="exam-date" required />
-        </label>
-        <button type="submit">Ekle</button>
-      </form>
+    <!-- ORTALAMA HESAPLAMA -->
+    <section id="gpa" class="tab">
+      <h2>Ortalama Hesaplama</h2>
+      <div class="card">
+        <div class="gpa-row">
+          <label>
+            Sınıf:
+            <select id="gpa-year">
+              <option value="1">1. sınıf</option>
+              <option value="2">2. sınıf</option>
+              <option value="3">3. sınıf</option>
+              <option value="4">4. sınıf</option>
+            </select>
+          </label>
+          <label>
+            Dönem:
+            <select id="gpa-term">
+              <option value="guz">Güz</option>
+              <option value="bahar">Bahar</option>
+            </select>
+          </label>
+        </div>
 
-      <div id="exam-list" class="list"></div>
+        <form id="gpa-course-form" class="gpa-course-form">
+          <label>
+            Ders adı:
+            <input type="text" id="gpa-course-name" required />
+          </label>
+          <label>
+            Kredi:
+            <input type="number" id="gpa-course-credit" min="0" step="0.5" required />
+          </label>
+          <label>
+            Not:
+            <select id="gpa-course-grade" required>
+              <option value="AA">AA (4.0)</option>
+              <option value="BA">BA (3.5)</option>
+              <option value="BB">BB (3.0)</option>
+              <option value="CB">CB (2.5)</option>
+              <option value="CC">CC (2.0)</option>
+              <option value="DC">DC (1.5)</option>
+              <option value="DD">DD (1.0)</option>
+              <option value="FF">FF (0.0)</option>
+            </select>
+          </label>
+          <button type="submit" class="small-accent-btn">Ders Ekle</button>
+        </form>
+
+        <div id="gpa-courses-list" class="list"></div>
+
+        <div class="gpa-summary">
+          <div>
+            <span class="muted-text">Seçili dönem ortalaması</span>
+            <div id="term-gpa" class="gpa-value">-</div>
+          </div>
+          <div>
+            <span class="muted-text">Genel (kümülatif) ortalama</span>
+            <div id="cumulative-gpa" class="gpa-value">-</div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Eksik Konular -->
-    <section id="topics" class="tab">
-      <h2>Eksik Konular</h2>
-      <form id="topic-form" class="card">
-        <label>
-          Ders:
-          <input type="text" id="topic-course" placeholder="Örn: Kimya" required />
-        </label>
-        <label>
-          Konu:
-          <input type="text" id="topic-title" placeholder="Örn: Asit–baz" required />
-        </label>
-        <label>
-          Öncelik:
-          <select id="topic-priority">
-            <option value="yüksek">Yüksek</option>
-            <option value="orta">Orta</option>
-            <option value="düşük">Düşük</option>
-          </select>
-        </label>
-        <button type="submit">Ekle</button>
-      </form>
+    <!-- ZAMANLAYICI -->
+    <section id="schedule" class="tab">
+      <h2>Ders Zamanlayıcı</h2>
+      <div class="card">
+        <form id="schedule-form" class="gpa-course-form">
+          <label>
+            Ders:
+            <input type="text" id="schedule-course" required />
+          </label>
+          <label>
+            Gün:
+            <select id="schedule-day" required>
+              <option value="Pazartesi">Pazartesi</option>
+              <option value="Salı">Salı</option>
+              <option value="Çarşamba">Çarşamba</option>
+              <option value="Perşembe">Perşembe</option>
+              <option value="Cuma">Cuma</option>
+              <option value="Cumartesi">Cumartesi</option>
+              <option value="Pazar">Pazar</option>
+            </select>
+          </label>
+          <label>
+            Saat:
+            <input type="time" id="schedule-time" required />
+          </label>
+          <button type="submit" class="small-accent-btn">Ekle</button>
+        </form>
 
-      <div id="topic-list" class="list"></div>
+        <div id="schedule-list" class="list"></div>
+      </div>
     </section>
   </main>
 
