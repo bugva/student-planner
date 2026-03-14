@@ -12,15 +12,19 @@
 
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="theme-dark">
   <header class="app-header">
-    <h1>Öğrenci Asistanı</h1>
+    <div class="header-main">
+      <h1>Öğrenci Asistanı</h1>
+      <button id="theme-toggle" class="theme-toggle">☾ Koyu</button>
+    </div>
   </header>
 
   <nav class="tabs">
     <button class="tab-button active" data-tab="courses">Dersler</button>
     <button class="tab-button" data-tab="gpa">Ortalama</button>
     <button class="tab-button" data-tab="schedule">Zamanlayıcı</button>
+    <button class="tab-button" data-tab="plan">Plan</button>
   </nav>
 
   <main>
@@ -37,7 +41,7 @@
 
         <section class="course-detail card" id="course-detail">
           <div id="no-course-selected">
-            <p style="color:#9ca3af;font-size:14px;">
+            <p class="muted-text">
               Soldan bir ders seç veya yeni ders ekle.
             </p>
           </div>
@@ -47,8 +51,34 @@
 
             <div class="detail-section">
               <h3>Notlar / Eksikler</h3>
-              <textarea id="course-notes" rows="6" placeholder="Bu derste eksik olduğun konuları, özetleri, önemli noktaları buraya yaz."></textarea>
+              <textarea
+                id="course-notes"
+                rows="5"
+                placeholder="Bu derste eksik olduğun konuları, özetleri, önemli noktaları buraya yaz."
+              ></textarea>
               <button id="save-notes-btn" class="small-accent-btn">Notları Kaydet</button>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-header">
+                <h3>Derse Özel Görevler</h3>
+                <button id="add-course-task-btn" class="small-accent-btn">+ Görev</button>
+              </div>
+              <div id="course-tasks-list" class="list"></div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-header">
+                <h3>Çalışma Süresi</h3>
+              </div>
+              <p class="muted-text small">
+                Bu derse çalışırken sayacı başlat/durdur; toplam süre burada birikir.
+              </p>
+              <div class="timer-row">
+                <span id="course-timer-display" class="timer-display">0 sn</span>
+                <button id="course-timer-toggle" class="small-accent-btn">Başlat</button>
+                <button id="course-timer-reset" class="small-btn danger">Sıfırla</button>
+              </div>
             </div>
 
             <div class="detail-section">
@@ -56,7 +86,7 @@
                 <h3>Dosyalar / Kaynaklar</h3>
                 <button id="add-resource-btn" class="small-accent-btn">+ Kaynak</button>
               </div>
-              <p class="muted-text" style="margin-top:-4px;margin-bottom:8px;">
+              <p class="muted-text small">
                 Buraya dosyaların için link ekleyebilirsin (Google Drive, pdf linki, ders portalı vs.).
               </p>
               <div id="resource-list" class="list"></div>
@@ -70,23 +100,29 @@
     <section id="gpa" class="tab">
       <h2>Ortalama Hesaplama</h2>
       <div class="card">
-        <div class="gpa-row">
-          <label>
-            Sınıf:
-            <select id="gpa-year">
-              <option value="1">1. sınıf</option>
-              <option value="2">2. sınıf</option>
-              <option value="3">3. sınıf</option>
-              <option value="4">4. sınıf</option>
-            </select>
-          </label>
-          <label>
-            Dönem:
-            <select id="gpa-term">
-              <option value="guz">Güz</option>
-              <option value="bahar">Bahar</option>
-            </select>
-          </label>
+        <div class="gpa-top-row">
+          <div class="gpa-row">
+            <label>
+              Sınıf:
+              <select id="gpa-year">
+                <option value="1">1. sınıf</option>
+                <option value="2">2. sınıf</option>
+                <option value="3">3. sınıf</option>
+                <option value="4">4. sınıf</option>
+              </select>
+            </label>
+            <label>
+              Dönem:
+              <select id="gpa-term">
+                <option value="guz">Güz</option>
+                <option value="bahar">Bahar</option>
+              </select>
+            </label>
+          </div>
+          <div class="gpa-backup-buttons">
+            <button id="backup-export" class="small-btn">Dışa Aktar</button>
+            <button id="backup-import" class="small-btn">İçe Aktar</button>
+          </div>
         </div>
 
         <form id="gpa-course-form" class="gpa-course-form">
@@ -110,6 +146,9 @@
               <option value="DD">DD (1.0)</option>
               <option value="FF">FF (0.0)</option>
             </select>
+            <button type="button" id="exam-calc-btn" class="small-btn" style="margin-top:4px;">
+              Not Hesapla (vize/final)
+            </button>
           </label>
           <button type="submit" class="small-accent-btn">Ders Ekle</button>
         </form>
@@ -126,6 +165,8 @@
             <div id="cumulative-gpa" class="gpa-value">-</div>
           </div>
         </div>
+
+        <div class="gpa-stats muted-text small" id="gpa-stats"></div>
       </div>
     </section>
 
@@ -157,7 +198,27 @@
           <button type="submit" class="small-accent-btn">Ekle</button>
         </form>
 
-        <div id="schedule-list" class="list"></div>
+        <div id="schedule-week" class="schedule-week"></div>
+      </div>
+    </section>
+
+    <!-- PLAN / GENEL GÖREVLER -->
+    <section id="plan" class="tab">
+      <h2>Plan / Yapılacaklar</h2>
+      <div class="card">
+        <form id="todo-form" class="gpa-course-form">
+          <label>
+            Yapılacak:
+            <input type="text" id="todo-title" required />
+          </label>
+          <label>
+            Tarih:
+            <input type="date" id="todo-date" />
+          </label>
+          <button type="submit" class="small-accent-btn">Ekle</button>
+        </form>
+
+        <div id="todo-list" class="list"></div>
       </div>
     </section>
   </main>
