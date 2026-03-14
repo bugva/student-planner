@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Öğrenci Asistanı</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- iPhone'da tam ekran için -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Ders Asistanı" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Öğrenci Asistanı</h1>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-button active" data-tab="tasks">Görevler</button>
+    <button class="tab-button" data-tab="exams">Sınavlar</button>
+    <button class="tab-button" data-tab="topics">Eksik Konular</button>
+  </nav>
+
+  <main>
+    <!-- Görevler -->
+    <section id="tasks" class="tab active">
+      <h2>Görevler</h2>
+      <form id="task-form" class="card">
+        <label>
+          Ders:
+          <input type="text" id="task-course" placeholder="Örn: Matematik" required />
+        </label>
+        <label>
+          Görev:
+          <input type="text" id="task-title" placeholder="Örn: 5. ünite ödevi" required />
+        </label>
+        <label>
+          Son Tarih:
+          <input type="date" id="task-due" />
+        </label>
+        <button type="submit">Ekle</button>
+      </form>
+
+      <div id="task-list" class="list"></div>
+    </section>
+
+    <!-- Sınavlar -->
+    <section id="exams" class="tab">
+      <h2>Sınavlar</h2>
+      <form id="exam-form" class="card">
+        <label>
+          Ders:
+          <input type="text" id="exam-course" placeholder="Örn: Fizik" required />
+        </label>
+        <label>
+          Sınav Adı:
+          <input type="text" id="exam-title" placeholder="Örn: Vize" required />
+        </label>
+        <label>
+          Tarih:
+          <input type="date" id="exam-date" required />
+        </label>
+        <button type="submit">Ekle</button>
+      </form>
+
+      <div id="exam-list" class="list"></div>
+    </section>
+
+    <!-- Eksik Konular -->
+    <section id="topics" class="tab">
+      <h2>Eksik Konular</h2>
+      <form id="topic-form" class="card">
+        <label>
+          Ders:
+          <input type="text" id="topic-course" placeholder="Örn: Kimya" required />
+        </label>
+        <label>
+          Konu:
+          <input type="text" id="topic-title" placeholder="Örn: Asit–baz" required />
+        </label>
+        <label>
+          Öncelik:
+          <select id="topic-priority">
+            <option value="yüksek">Yüksek</option>
+            <option value="orta">Orta</option>
+            <option value="düşük">Düşük</option>
+          </select>
+        </label>
+        <button type="submit">Ekle</button>
+      </form>
+
+      <div id="topic-list" class="list"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
